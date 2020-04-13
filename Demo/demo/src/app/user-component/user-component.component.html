@@ -1,0 +1,173 @@
+<notifier-container></notifier-container>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="example-container mat-elevation-z8 clearfix">
+                <div class="example-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
+                    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+                    <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+                            API busy. It will be reset in one minute.
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="active-pink-3 active-pink-4 col-md-8">
+                        <input class="form-control" [value]="searchStr" (input)="mapstr($event.target.value)" type="text" placeholder="Search" aria-label="Search">
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" (click)="Search($event.target.value)">Search</button> 
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-success" data-toggle="modal" data-target="#createUserModal" >Create</button>
+                        <div class="modal fade" id="createUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Create new User</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="usr">Name:</label>
+                                        <input type="text" [(ngModel)]="nameCreate" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">Ussername:</label>
+                                        <input type="text" [(ngModel)]="userNameCreate"  class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">Age:</label>
+                                        <input type="number" [(ngModel)]="ageCreate" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">Gender:</label>
+                                        <input type="text" [(ngModel)]="genderCreate" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="CancelModal()">Close</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="Create()" >Create</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-danger" (click)="delete()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br><br><br><br>
+        <div class="row">
+            <div class="example-table-container col-md-12">
+                <table mat-table [dataSource]="data" class="table example-table table-striped" matSort matSortActive="created" matSortDisableClear
+                    matSortDirection="desc">
+                    <!-- Number Column -->
+                    <ng-container matColumnDef="number">
+                        <th mat-header-cell *matHeaderCellDef>#</th>
+                        <td mat-cell *matCellDef="let row"><input value="{{row.id}}" type="checkbox"  (change)="clickCheck($event,row.id)"></td>
+                    </ng-container>
+        
+                    <!-- Id Column -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef>Id</th>
+                        <td mat-cell *matCellDef="let row">{{row.id}}</td>
+                    </ng-container>
+        
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name" >
+                        <th mat-header-cell *matHeaderCellDef>Name</th>
+                        <td mat-cell *matCellDef="let row">{{row.name}}</td>
+                    </ng-container>
+                    <!-- UserName Column -->
+                    <ng-container matColumnDef="userName">
+                        <th mat-header-cell *matHeaderCellDef>UserName</th>
+                        <td mat-cell *matCellDef="let row">{{row.userName}}</td>
+                    </ng-container>
+                    <!-- Age Column -->
+                    <ng-container matColumnDef="age">
+                        <th mat-header-cell *matHeaderCellDef>Age</th>
+                        <td mat-cell *matCellDef="let row">{{row.age}}</td>
+                    </ng-container>
+                    <!-- Gender Column -->
+                    <ng-container matColumnDef="gender">
+                        <th mat-header-cell *matHeaderCellDef>Gender</th>
+                        <td mat-cell *matCellDef="let row">{{row.gender}}</td>
+                    </ng-container>
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>   
+                        <td mat-cell *matCellDef="let row"> 
+                            <button 
+                                (click)="EditClick(row.id,row.name,row.userName,row.age,row.gender)"
+                                mat-raised-button class="btn btn-info" 
+                                data-toggle="modal" 
+                                data-target="#editModal" >Edit</button> 
+                            
+                        </td>
+                    </ng-container> 
+                    
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <div>
+                <mat-paginator [length]="resultsLength" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="usr">Name:</label>
+                <input type="text" [(ngModel)]="nameCreate" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="pwd">Ussername:</label>
+                <input type="text" [(ngModel)]="userNameCreate"  class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="pwd">Age:</label>
+                <input type="number" [(ngModel)]="ageCreate" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="pwd">Gender:</label>
+                <input type="text" [(ngModel)]="genderCreate" class="form-control">
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="CancelModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="Update()" data-dismiss="modal">Save changes</button>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- <div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+        <h3>Column 1</h3>
+        <p>Lorem ipsum dolor..</p>
+        </div>
+        <div class="col-sm-4">
+        <h3>Column 2</h3>
+        <p>Lorem ipsum dolor..</p>
+        </div>
+        <div class="col-sm-4">
+        <h3>Column 3</h3>
+        <p>Lorem ipsum dolor..</p>
+        </div>
+    </div>
+</div> -->
