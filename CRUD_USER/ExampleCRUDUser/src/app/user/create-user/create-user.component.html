@@ -1,0 +1,122 @@
+<div class="content-wrapper">
+    <section class="content">
+        <div class="row">
+            <div class="container-fluid ">
+                <div class="header clearfix">
+                    <h3>Create User</h3>
+                    <a class="btn btn-danger" routerLink="/user" mat-raised-button color="primary">Go Back</a>
+                </div>
+                <div class="content">
+
+                    <!-- FORM -->
+                    <form novalidate [formGroup]="createForm" (ngSubmit)="createForm.value">
+                        <div class="example-container">
+
+                            <!-- UserName -->
+                            <div class="form-group row">
+                                <mat-form-field style="width: 900px;">
+                                    <input matInput placeholder="UserName" class="form-control form-control-sm"
+                                        formControlName="userName" required>
+                                </mat-form-field>
+                                <div *ngIf="UserName.errors && UserName.touched" class="form-group" style="color:red;"
+                                    role="alert">
+                                    <div *ngIf="UserName.hasError('required')">
+                                        UserName is required
+                                    </div>
+                                    <div *ngIf="UserName.hasError('minlength')">
+                                        UserName is required 5-25 characters
+                                    </div>
+                                    <div *ngIf="UserName.hasError('maxlength')">
+                                        UserName must be less than 25 characters
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- FullName -->
+                            <div class="form-group row">
+                                <mat-form-field style="width: 900px;">
+                                    <input matInput placeholder="FullName" class="form-control form-control-sm"
+                                        formControlName="fullName" required>
+                                </mat-form-field>
+                                <div *ngIf="FullName.errors && FullName.touched" class="form-group" style="color:red;"
+                                    role="alert">
+                                    <div *ngIf="FullName.hasError('required')">
+                                        Full Name is required
+                                    </div>
+                                    <div *ngIf="FullName.hasError('minlength')">
+                                        Full Name is required 5-100 characters
+                                    </div>
+                                    <div *ngIf="FullName.hasError('maxlength')">
+                                        Full Name must be less than 100 characters
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="form-group row">
+                                <mat-form-field style="width: 900px;">
+                                    <input matInput placeholder="Gender" class="form-control form-control-sm"
+                                        formControlName="gender" required>
+                                </mat-form-field>
+                                <div *ngIf="Gender.errors && Gender.touched" class="form-group" style="color:red;"
+                                    role="alert">
+                                    <div *ngIf="Gender.hasError('required')">
+                                        UserName is required
+                                    </div>
+                                    <div *ngIf="Gender.hasError('minlength')">
+                                        Full Name is required 2-15 characters
+                                    </div>
+                                    <div *ngIf="Gender.hasError('maxlength')">
+                                        Full Name must be less than 15 characters
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Age -->
+                            <div class="form-group row">
+                                <mat-form-field style="width: 900px;">
+                                    <input matInput placeholder="Age" class="form-control form-control-sm"
+                                        formControlName="age" [pattern]="agePattern" required>
+                                </mat-form-field>
+                                <div *ngIf="Age.errors && Age.touched" class="form-group" style="color:red;"
+                                    role="alert">
+                                    <div *ngIf="Age.hasError('required')">
+                                        Age is required
+                                    </div>
+                                    <div *ngIf="Age?.errors && Age.errors.pattern">
+                                        Age is not correct number format
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-group row">
+                                <mat-form-field style="width: 900px;">
+                                    <input matInput placeholder="Email" class="form-control form-control-sm"
+                                        formControlName="email" [pattern]="emailPattern" required>
+                                </mat-form-field>
+                                <div *ngIf="Email.errors && Email.touched" class="form-group" style="color:red;"
+                                    role="alert">
+                                    <div *ngIf="Email.hasError('required')">
+                                        Email is required
+                                    </div>
+                                    <div *ngIf="Email?.errors && Email.errors.pattern">
+                                        Email is not correct email format
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row" style="margin-top: 3%">
+                                <div class="col-10 offset-2">
+                                    <button type="submit" class="btn btn-primary" (click)="onSubmit()" mat-raised-button
+                                        color="primary">Create</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
